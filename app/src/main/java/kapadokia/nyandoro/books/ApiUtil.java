@@ -1,5 +1,6 @@
 package kapadokia.nyandoro.books;
 
+import android.net.Uri;
 import android.util.Log;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ public class ApiUtil {
     //base url,  part of the address that is not going to change
     // that's why we've declared it as a constant
     public static final String BASE_API_URL="https:/www.googleapis.com/books/v1/volumes";
+    public static final String QUERY_PARAMETER_KEY="q";
 
     /**
      * a method to build a query url
@@ -25,11 +27,13 @@ public class ApiUtil {
     // not recommended
     public static URL  buildUrl(String title){
 
-        String fullUrl = BASE_API_URL+"?q=" +title;
         URL url =null;
+        Uri uri = Uri.parse(BASE_API_URL).buildUpon()
+                    .appendQueryParameter(QUERY_PARAMETER_KEY, title)
+                    .build();
         try{
 
-            url = new URL(fullUrl);
+            url = new URL(uri.toString());
         }catch (Exception e){
             e.printStackTrace();
         }

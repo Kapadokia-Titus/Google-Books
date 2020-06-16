@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -12,12 +14,16 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    private ProgressBar progressBar;
+    private TextView error_tv;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        progressBar = findViewById(R.id.pb_loading);
+        error_tv = findViewById(R.id.error_tv);
 
 
         try {
@@ -32,6 +38,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public class BookQueryTask extends AsyncTask<URL, Void, String>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
 
         @Override
         protected String doInBackground(URL... urls) {
@@ -50,8 +62,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            progressBar.setVisibility(View.INVISIBLE);
             TextView textView = findViewById(R.id.tv_response);
-            textView.setText(result);
+
+            if (result==null){
+                error_tv.setVisibility(View.VISIBLE);
+            }else {
+                error_tv.setVisibility(View.INVISIBLE);
+                textView.setText(result);
+            }
+
         }
     }
 
