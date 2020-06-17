@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+
+import kapadokia.nyandoro.books.model.Book;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -69,8 +72,19 @@ public class MainActivity extends AppCompatActivity {
                 error_tv.setVisibility(View.VISIBLE);
             }else {
                 error_tv.setVisibility(View.INVISIBLE);
-                textView.setText(result);
             }
+
+            ArrayList<Book> books = ApiUtil.getBooksFromJson(result);
+
+            // create an empty string as a container for the result
+            String resultString = "";
+
+            for (Book book: books){
+                resultString = resultString + book.title + "\n"+
+                        book.publishedDate+"\n\n";
+            }
+
+            textView.setText(resultString);
 
         }
     }

@@ -3,11 +3,17 @@ package kapadokia.nyandoro.books;
 import android.net.Uri;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import kapadokia.nyandoro.books.model.Book;
 
 public class ApiUtil {
 
@@ -80,5 +86,59 @@ public class ApiUtil {
 
 
         }
+
+    //getting books from json
+    public static ArrayList<Book> getBooksFromJson(String json){
+
+        //it is best to create constants instead of strings for the values we are extracting
+        final String ID = "id";
+        final String TITLE = "title";
+        final String SUBTITLE = "subTitle";
+        final String AUTHORS = "authors";
+        final String PUBLISHER = "publisher";
+        final String PUBLISHED_DATE = "publishedDate";
+        final String VOLUMEINFO = "volumeInfo";
+        final String ITEMS = "items";
+        //declare an arraylist of books and set it to null in the beginning
+        ArrayList<Book> books = new ArrayList<Book>();
+
+        try {
+
+            JSONObject jsonObject = new JSONObject(json);
+            JSONArray jsonArray= jsonObject.getJSONArray(ITEMS);
+            int numberOfBooks = jsonArray.length();
+
+            for (int i=0; i<numberOfBooks; i++){
+
+                // creating a single json object
+                JSONObject bookJson = jsonArray.getJSONObject(i);
+                JSONObject volumeInfoJson = bookJson.getJSONObject(VOLUMEINFO);
+
+                //remember the authors are in an array
+                int authorNum= volumeInfoJson.getJSONArray(AUTHORS).length();
+
+                //create an array of strings that will contain the authors
+                String[] authors = new String[authorNum];
+                //loop through the array and pass each author from the array
+                for (int j=0; j<authorNum; j++){
+                    authors[j]  = volumeInfoJson.getJSONArray(AUTHORS).get(j).toString();
+                }
+
+                Book book = new Book(bookJson.getString(ID),
+                                    volumeInfoJson.getString(TITLE),
+                        (volumeInfoJson.isNull(SUBTITLE)?"":volumeInfoJson.getString(SUBTITLE)),
+                        authors,
+                        volumeInfoJson.getString(PUBLISHER),
+                        volumeInfoJson.getString(PUBLISHED_DATE));
+
+                books.add(book);
+            }
+
+
+        }catch (Exception e){
+
+        }
+        return null;
+    }
 
 }
