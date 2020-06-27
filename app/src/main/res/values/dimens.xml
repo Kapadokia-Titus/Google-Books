@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="small_padding">8dp</dimen>
+    <dimen name="text_large_size">20sp</dimen>
+    <dimen name="medium_text_dimens">18sp</dimen>
 </resources>
