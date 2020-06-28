@@ -22,6 +22,7 @@ public class ApiUtil {
     // that's why we've declared it as a constant
     public static final String BASE_API_URL="https:/www.googleapis.com/books/v1/volumes";
     public static final String QUERY_PARAMETER_KEY="q";
+    public static final String TITLE= "intitle:";
 
     /**
      * a method to build a query url
@@ -47,7 +48,9 @@ public class ApiUtil {
         return  url;
     }
 
+    public static URL buildUrl(String title, String author, String publisher, String isbn){
 
+    }
     //connect to the api
     public static String getJson(URL url) throws IOException {
 
