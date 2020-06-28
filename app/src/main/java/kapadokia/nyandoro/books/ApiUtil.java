@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 import kapadokia.nyandoro.books.model.Book;
 
+
 public class ApiUtil {
 
 
@@ -22,7 +23,12 @@ public class ApiUtil {
     // that's why we've declared it as a constant
     public static final String BASE_API_URL="https:/www.googleapis.com/books/v1/volumes";
     public static final String QUERY_PARAMETER_KEY="q";
+    public static final String KEY="key";
+    public static final String API_KEY="kapadokia";
     public static final String TITLE= "intitle:";
+    public static final String AUTHOR= "inauthor:";
+    public static final String PUBLISHER= "inpublisher:";
+    public static final String ISBN= "isbn:";
 
     /**
      * a method to build a query url
@@ -49,7 +55,30 @@ public class ApiUtil {
     }
 
     public static URL buildUrl(String title, String author, String publisher, String isbn){
+        URL url = null;
+        StringBuilder sb = new StringBuilder();
 
+        if (!title.isEmpty()) sb.append(TITLE+title+"+");
+        if (!publisher.isEmpty()) sb.append(PUBLISHER+publisher+"+");
+        if (!author.isEmpty()) sb.append(AUTHOR+title+"+");
+        if (!isbn.isEmpty()) sb.append(ISBN+title+"+");
+
+        sb.setLength(sb.length()-1);
+        String query = sb.toString();
+
+        Uri uri = Uri.parse(BASE_API_URL).buildUpon()
+                    .appendQueryParameter(QUERY_PARAMETER_KEY,query)
+                    .appendQueryParameter(KEY, API_KEY)
+                    .build();
+
+        try{
+            url = new URL(uri.toString());
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return url;
     }
     //connect to the api
     public static String getJson(URL url) throws IOException {
@@ -105,6 +134,7 @@ public class ApiUtil {
         final String DESCRIPTION = "description";
         final String IMAGELINKS = "imageLinks";
         final String THUMBNAIL = "thumbnail";
+        int authorNum;
         //declare an arraylist of books and set it to null in the beginning
         ArrayList<Book> books = new ArrayList<Book>();
 
@@ -121,9 +151,20 @@ public class ApiUtil {
                 JSONObject volumeInfoJson = bookJson.getJSONObject(VOLUMEINFO);
 
                 // imageLinks json object
-                JSONObject imageLinksJSON = volumeInfoJson.getJSONObject(IMAGELINKS);
+                JSONObject imageLinksJSON =null;
+                if (volumeInfoJson.has(IMAGELINKS)){
+                    imageLinksJSON= volumeInfoJson.getJSONObject(IMAGELINKS);
+                }
+
                 //remember the authors are in an array
-                int authorNum= volumeInfoJson.getJSONArray(AUTHORS).length();
+
+                try {
+                    authorNum= volumeInfoJson.getJSONArray(AUTHORS).length();
+                }catch (Exception e){
+                    authorNum =0;
+                    e.printStackTrace();
+                }
+
 
                 //create an array of strings that will contain the authors
                 String[] authors = new String[authorNum];
@@ -136,10 +177,10 @@ public class ApiUtil {
                                     volumeInfoJson.getString(TITLE),
                         (volumeInfoJson.isNull(SUBTITLE)?"":volumeInfoJson.getString(SUBTITLE)),
                         authors,
-                        volumeInfoJson.getString(PUBLISHER),
-                        volumeInfoJson.getString(PUBLISHED_DATE),
-                        volumeInfoJson.getString(DESCRIPTION),
-                        imageLinksJSON.getString(THUMBNAIL));
+                        (volumeInfoJson.isNull(PUBLISHER)?"":volumeInfoJson.getString(PUBLISHER)),
+                        (volumeInfoJson.isNull(PUBLISHED_DATE)?"":volumeInfoJson.getString(PUBLISHED_DATE)),
+                        (volumeInfoJson.isNull(DESCRIPTION)?"":volumeInfoJson.getString(DESCRIPTION)),
+                        (imageLinksJSON.isNull(THUMBNAIL)?"":imageLinksJSON.getString(THUMBNAIL)));
 
                 books.add(book);
             }
