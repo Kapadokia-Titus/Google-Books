@@ -100,6 +100,8 @@ public class ApiUtil {
         final String VOLUMEINFO = "volumeInfo";
         final String ITEMS = "items";
         final String DESCRIPTION = "description";
+        final String IMAGELINKS = "imageLinks";
+        final String THUMBNAIL = "thumbnail";
         //declare an arraylist of books and set it to null in the beginning
         ArrayList<Book> books = new ArrayList<Book>();
 
@@ -115,6 +117,8 @@ public class ApiUtil {
                 JSONObject bookJson = jsonArray.getJSONObject(i);
                 JSONObject volumeInfoJson = bookJson.getJSONObject(VOLUMEINFO);
 
+                // imageLinks json object
+                JSONObject imageLinksJSON = volumeInfoJson.getJSONObject(IMAGELINKS);
                 //remember the authors are in an array
                 int authorNum= volumeInfoJson.getJSONArray(AUTHORS).length();
 
@@ -131,7 +135,8 @@ public class ApiUtil {
                         authors,
                         volumeInfoJson.getString(PUBLISHER),
                         volumeInfoJson.getString(PUBLISHED_DATE),
-                        volumeInfoJson.getString(DESCRIPTION));
+                        volumeInfoJson.getString(DESCRIPTION),
+                        imageLinksJSON.getString(THUMBNAIL));
 
                 books.add(book);
             }

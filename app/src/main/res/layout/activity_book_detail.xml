@@ -29,7 +29,7 @@
         android:layout_marginTop="@dimen/margin"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_subtitle"
-        app:srcCompat="@drawable/book_open" />
+        android:imageUrl="@{Book.thumbnail}"/>
 
     <TextView
         android:id="@+id/tv_title"
