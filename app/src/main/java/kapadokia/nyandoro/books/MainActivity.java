@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             progressBar.setVisibility(View.INVISIBLE);
-            TextView textView = findViewById(R.id.tv_response);
+
 
             if (result==null){
                 error_tv.setVisibility(View.VISIBLE);
@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
                         book.publishedDate+"\n\n";
             }
 
-            textView.setText(resultString);
 
         }
     }
