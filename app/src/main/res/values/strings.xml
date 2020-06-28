@@ -3,4 +3,5 @@
     <string name="error_loading_data_from_google_books">Error Loading data from google books</string>
     <string name="title_textview">Title TextView</string>
     <string name="publisher_text">publisher text</string>
+    <string name="search">Search</string>
 </resources>
