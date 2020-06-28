@@ -8,4 +8,6 @@
     <dimen name="medium_size">24sp</dimen>
     <dimen name="extra_medium_size">18sp</dimen>
     <dimen name="normal_dimen">16sp</dimen>
+    <dimen name="margin_search_activity">24dp</dimen>
+    <dimen name="button_text_size">18sp</dimen>
 </resources>
