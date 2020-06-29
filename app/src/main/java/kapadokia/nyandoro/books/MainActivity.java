@@ -152,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 ArrayList<Book> books = ApiUtil.getBooksFromJson(result);
 
                 // create an empty string as a container for the result
-                String resultString = "";
 
 
                 BooksAdapter adapter =  new BooksAdapter(books);

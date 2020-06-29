@@ -2,6 +2,7 @@ package kapadokia.nyandoro.books;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +11,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.net.URL;
+
+import kapadokia.nyandoro.books.sharedPref.SpUtil;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -41,6 +44,24 @@ public class SearchActivity extends AppCompatActivity {
                     Toast.makeText(SearchActivity.this, message, Toast.LENGTH_SHORT).show();
                 }else {
                     URL queryUrl = ApiUtil.buildUrl(title,author,publisher,isbn);
+
+                    // SharedPreference
+                    Context context = getApplicationContext();
+                    int position = SpUtil.getPreferenceInt(context, SpUtil.POSITION);
+
+                    if (position==0 || position ==5){
+                        position =1;
+                    }else {
+                        position ++;
+                    }
+
+                    String key = SpUtil.QUERY + String.valueOf(position);
+                    String value = title+","+author+","+publisher+","+isbn;
+
+                    SpUtil.setPrefferenceString(context,key,value);
+
+                    // update the preference position
+                    SpUtil.setPrefferenceInt(context,SpUtil.POSITION, position);
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     intent.putExtra("Query", queryUrl);
                     startActivity(intent);
